@@ -36,11 +36,47 @@ This is a RESTful API built for managing user authentication and todo lists. It 
 - **Password Hashing**: bcryptjs
 - **Environment Variables**: dotenv
 - **Logging**: Morgan
-- **Containerization**: Docker (for MySQL)
+- **Containerization**: Docker Compose
 
 ---
 
-## **Endpoints**
+## **Getting Started**
+
+### **Prerequisites**
+- Docker (with Docker Compose support)
+- Postman or any API testing tool
+
+### **Setup Instructions**
+
+#### **Using Docker Compose**
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/REFATBHUYAN/easydrop-api.git
+   cd easydrop-api
+   ```
+
+2. **Build and Start the Services**:
+   Run the following command to start both the MySQL database and the API server:
+   ```bash
+   docker-compose up --build
+   ```
+
+   - The database will be available at `db:3306` inside the containers.
+   - The API will be accessible at `http://localhost:5000`.
+
+3. **Run Migrations**:
+   After starting the services, run the migrations and seeds:
+   ```bash
+   docker-compose exec app npx knex migrate:latest
+   docker-compose exec app npx knex seed:run
+   ```
+
+4. **Test the API**:
+   Use Postman or any API testing tool to test the endpoints.
+
+---
+
+### **Endpoints**
 
 | Method | Endpoint            | Description                                   |
 |--------|---------------------|-----------------------------------------------|
@@ -52,46 +88,6 @@ This is a RESTful API built for managing user authentication and todo lists. It 
 | GET    | `/api/todos/:id`     | Retrieve a specific todo by its ID           |
 | PUT    | `/api/todos/:id`     | Update a specific todo                       |
 | DELETE | `/api/todos/:id`     | Delete a specific todo by its ID             |
-
----
-
-## **Getting Started**
-
-### **Prerequisites**
-- Node.js (v18 or higher)
-- Docker (for running MySQL)
-- Postman or any API testing tool
-
-### **Setup Instructions**
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/REFATBHUYAN/easydrop-api.git
-   cd easydrop-api
-   ```
-
-2. **Install Dependencies**:
-   ```bash
-   npm install
-   ```
-
-3. **Start the MySQL Container**:
-   ```bash
-   docker run --name mysql-container -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=easydrop -p 3306:3306 -d mysql:latest
-   ```
-
-4. **Run Migrations**:
-   ```bash
-   npx knex migrate:latest
-   npx knex seed:run
-   ```
-
-5. **Start the Server**:
-   ```bash
-   npm run dev
-   ```
-
-6. **Test the API**:
-   Use Postman or any API testing tool to test the endpoints.
 
 ---
 
@@ -136,6 +132,8 @@ easydrop-api/
 ├── knexfile.js               # Knex configuration
 ├── .env                      # Environment variables
 ├── package.json              # Project dependencies
+├── Dockerfile                # Docker configuration for the app
+├── docker-compose.yml        # Docker Compose configuration
 └── README.md                 # This file
 ```
 
@@ -146,11 +144,13 @@ Create a `.env` file in the root directory and add the following variables:
 ```env
 PORT=5000
 JWT_SECRET=your_very_secure_secret_key
-MYSQL_HOST=localhost
+MYSQL_HOST=db
 MYSQL_USER=root
 MYSQL_PASSWORD=rootpassword
 MYSQL_DATABASE=easydrop
 ```
+
+> **Note**: When using Docker Compose, the `MYSQL_HOST` should point to the service name `db` instead of `localhost`.
 
 ---
 
@@ -244,8 +244,43 @@ MYSQL_DATABASE=easydrop
 
 ---
 
+## **Using Docker Compose**
+
+To simplify the setup process, you can use Docker Compose to start both the MySQL database and the API server with a single command.
+
+### **Steps**
+1. **Install Docker and Docker Compose**:
+   Ensure Docker and Docker Compose are installed on your system.
+
+2. **Start the Services**:
+   Run the following command to start the application and database:
+   ```bash
+   docker-compose up --build
+   ```
+
+   - The database will be available at `db:3306` inside the containers.
+   - The API will be accessible at `http://localhost:5000`.
+
+3. **Run Migrations**:
+   After starting the services, run the migrations and seeds:
+   ```bash
+   docker-compose exec app npx knex migrate:latest
+   docker-compose exec app npx knex seed:run
+   ```
+
+4. **Stop the Services**:
+   To stop the services, press `Ctrl+C` in the terminal where Docker Compose is running.
+
+---
 
 ## **Contact**
 For any questions or feedback, please contact:
-- Name: Md. Refat Bhuyan
+- Name: MD. REFAT BHUYAN
 - Email: refatbubt@gmail.com
+
+---
+
+### **Key Benefits of Using Docker Compose**
+- **Simplified Setup**: Both the application and the database can be started with a single command.
+- **Reproducibility**: Ensures consistent environments across different machines.
+- **Ease of Use**: Reduces the complexity of managing multiple containers manually.
